@@ -1,0 +1,14 @@
+
+
+h2 {
+    margin-bottom: 20px;
+    color:green;
+}
+
+.buttons {
+background-color : #79c2d0;
+}
+
+.buttons:hover {
+background-color: #53a8b6;
+}

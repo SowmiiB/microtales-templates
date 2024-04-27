@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        /* Old paper styling */
+        body {
+            font-family: 'Goudy Old Style';
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+        }
+
+        .content-area {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-right: 5px;
+            min-height: 50px;
+            height: 200; /* Adjust the height as needed */
+            overflow: hidden;
+            position: relative;
+            background-color: #f9e6c5; /* Background color from parchment effect */
+            border-radius: 15px; /* Rounded border */
+        }
+
+        #parchment {
+            background-color: #fffef0;
+            padding: 2em;
+            border: 1px solid #d8c0a0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            line-height: 1.8;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px; /* Rounded border */
+            padding-right: 20px;
+        }
+        #audio-parchment {
+            background-color: #fffef0;
+            padding: 2em;
+            border: 1px solid #d8c0a0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            line-height: 1.8;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px; /* Rounded border */
+            padding-right: 20px;
+        }
+
+        #scribeTitle {
+            font-size: 20px;
+            margin-bottom: 0.5em;
+            position: sticky; /* Fixed position */
+            top: 5px; /* Adjust as needed */
+            left: 0px; /* Adjust as needed */
+            width: calc(90% - 40px); /* Adjust as needed */
+            overflow: hidden;
+            white-space: normal; /* Allow text to wrap */
+            /* Remove text-overflow: ellipsis; */
+            background-color: #fffef0; /* Match parchment background */
+            padding: 5px 0px;
+            border-top-left-radius: 15px; /* Rounded border */
+            border-top-right-radius: 15px; /* Rounded border */
+            z-index: 1; /* Ensure title appears above parchment */
+            font-weight: bold; /* Make title bold */
+            font-family: 'Courier New', sans-serif; /* Change font */
+        }
+
+        #parchment-content {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        em {
+            font-style: italic;
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        .toggle-label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .toggle-option {
+            margin-right: 20px;
+        }
+
+        .audio-wrapper {
+            display: none; /* Hide audio wrapper initially */
+            border: 1px solid #ccc;
+            padding: 30px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-right: 5px;
+            min-height: 50px;
+            height: 350px;
+            overflow: hidden;
+            position: relative;
+            background-color: #c5f7e6; /* Different color for the background */
+            border-radius: 15px; /* Rounded border */
+
+        }
+
+        .audio-player {
+            margin-top: 10px;
+            width: 300; /* Adjust the width */
+            height: auto; /* Adjust the height */
+            border-radius: 15px; /* Rounded border */
+            border: 5px solid #ccc; /* Border */
+            padding: 100px; /* Padding */
+            box-sizing: border-box; /* Include border and padding in the width calculation */
+        }
+
+        audio {
+            width:300;
+            height: 10;
+        }
+
+        p {
+            font-family: 'Goudy Old Style'; /* Apply font family to entire content */
+            margin-bottom: 25px; /* Increase spacing between paragraphs */
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* Hide audio player by default */
+        .audio-player {
+            display: none;
+        }
+
+        .frequency_changer {
+            background-color: #eaeaea; /* Background color */
+            padding: 5px; /* Padding */
+            border: 1px solid #ccc; /* Border */
+            border-radius: 10px; /* Border radius */
+            margin-top: 10px;
+            width: 70px;
+            height: 80px;
+            margin-bottom: 15px; /* Margin bottom to separate it from other sections */
+        }
+
+        .frequency_button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+        }
+
+        .frequency_button img {
+            width: 50px; /* Adjust icon size as needed */
+            height: auto;
+        }
+
+        /* Tooltip text */
+        .frequency_button:hover::after {
+            content: "Change Frequency";
+            position: absolute;
+            background-color: #000;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            bottom: 150%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+
+        .small-section {
+            position: relative; /* Relative positioning for absolute positioning of tooltip */
+            background-color: #eaeaea; /* Background color */
+            padding: 10px; /* Padding */
+            border: 1px solid #ccc; /* Border */
+            border-radius: 5px; /* Border radius */
+            margin-bottom: 10px; /* Margin bottom to separate it from other sections */
+            overflow: hidden; /* Ensure no overflow */
+            min-height: 40px;
+        }
+
+        .icon-buttons {
+            position: absolute;
+            top: 50%;
+            left: 10px; /* Adjust as needed */
+            transform: translateY(-50%);
+            white-space: nowrap; /* Prevent wrapping */
+        }
+
+        .icon {
+            display: inline-block;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .icon img {
+            width: 40px; /* Adjust the width of the image */
+            height: 40px; /* Maintain aspect ratio */
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .icon:hover img {
+            background-color: #ddd;
+            color: #333;
+        }
+
+        .icon[data-tooltip]::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 5px); /* Place tooltip above icon */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .icon[data-tooltip]:hover::after {
+            opacity: 1;
+        }
+
+        .icon img.liked {
+            /* Define styles for the like button's icon when it's liked */
+            background-color: green; /* Change background color to green */
+            color: white; /* Change text color to white */
+        }
+
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="content-area" id="contentArea">
+                <div id="parchment">
+                    <div id="scribeTitle">{{scribe.title}}</div>
+                    <div id="parchment-content">
+                        <div id="htmlContent">
+                            <!-- Your HTML content goes here -->
+                        </div>
+                        <div class="footer">
+                            <span style="font-size: 10px;">★ ★ ★ ★ ★</span>
+                        </div>
+                    </div>
+                    <input type="button" onclick="download('text.txt')" value="Download">
+
+                </div>
+            </div>
+            <div>
+
+                    <div class="audio-wrapper" id="AudioWrapper">
+                        <div class="audio-player" id="audioContent">
+                            <audio id = 'audioPlayer' controls>
+                                <source id="audioSource" src="/media/{{audio.hz528}}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+
+
+
+                        </div>
+                        <div class="frequency_changer">
+                            <!-- Button with music frequency icon -->
+                            <button class="frequency_button" title="Change Frequency" onclick="toggleFrequencyDropdown()">
+                                <img src="/media/images/icons/frequency icon.png" alt="Frequency Icon">
+                            </button>
+                            <!-- Dropdown list of frequencies -->
+                            <div class="frequency_dropdown" id="frequencyDropdown" style="display: none;">
+                                <select id="frequencySelect" onchange="updateAudioSource()">
+                                    <option value="hz174">Hz 174</option>
+                                    <option value="hz285">Hz 285</option>
+                                    <option value="hz396">Hz 396</option>
+                                    <option value="hz417">Hz 417</option>
+                                    <option value="hz528" selected>Hz 528</option>
+                                    <option value="hz639">Hz 639</option>
+                                    <option value="hz741">Hz 741</option>
+                                    <option value="hz852">Hz 852</option>
+                                    <option value="hz963">Hz 963</option>
+                                    <!-- Add more options if needed -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+
+            <div class="small-section">
+                <!-- Content for the small section goes here -->
+                <div class="icon-buttons">
+                   <div class="icon-buttons">
+
+
+                        <span class="icon" data-tooltip="Like" onclick="likeScribe({{ scribe.id }})">
+                            <img src="/media/images/icons/like.png" alt="Like Scribe" class="like-icon">
+                        </span>
+                       <span id="likesCount">{{ scribe.likes }}</span>
+                        <span class="icon" data-tooltip="View Author" onclick="window.location.href='{% url 'view_author' scribe.id %}'">
+                            <img src="/media/images/icons/View Author.png" alt="View Author">
+                        </span>
+                        <span class="icon" data-tooltip="Add Author to Favourites" onclick="addFavAuthor({{ scribe.id }})">
+                            <img src="/media/images/icons/Favourite_Author.png" alt="Add Author to Favourites" class="fav-icon">
+                        </span>
+                       <span class="icon" data-tooltip="Go back to Home" onclick="goBack()">
+                            <img src="/media/images/icons/goBack.jpg" alt="Go back to Home">
+                        </span>
+
+                   </div></div></div>
+
+            <div class="toggle-options">
+                <label class="toggle-label"><input type="radio" name="contentToggle" value="text" onchange="toggleContent()" checked> Text</label> <!-- Default selected -->
+                <label class="toggle-label"><input type="radio" name="contentToggle" value="audio" onchange="toggleContent()"> Audio</label>
+            </div>
+        </div>
+
+        <script>
+            function goBack() {
+                window.history.back();
+            }
+
+
+
+            function toggleContent() {
+                var selectedOption = document.querySelector('input[name="contentToggle"]:checked').value;
+                var textContent = document.getElementById('contentArea');
+                var audioContent = document.getElementById('audioContent');
+                var audioWrapper = document.getElementById('AudioWrapper');
+
+                if (selectedOption === 'text') {
+                    textContent.style.display = 'block';
+                    audioContent.style.display = 'none';
+                    audioWrapper.style.display = 'none'; // Hide audio wrapper in text section
+                } else if (selectedOption === 'audio') {
+                    textContent.style.display = 'none';
+                    audioContent.style.display = 'block'; // Show only audio player when audio option is selected
+                    audioWrapper.style.display = 'block'; // Show audio wrapper in audio section
+                }
+
+            }
+
+            var docContentDiv = document.getElementById("htmlContent");
+            docContentDiv.innerHTML = `{% autoescape off %}{{ ebook }}{% endautoescape %}`;
+
+            function download(filename){
+                text = docContentDiv.innerHTML
+                var tempElement = document.createElement('div');
+                tempElement.innerHTML = text;
+
+                var plainText = tempElement.textContent || tempElement.innerText;
+
+                var blob = new Blob([plainText], {type: "text/plain"});
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement("a");
+                a.href = url;
+                a.download = filename;
+                a.click();
+            }
+
+            function toggleFrequencyDropdown() {
+                var dropdown = document.getElementById('frequencyDropdown');
+                if (dropdown.style.display === 'none') {
+                    dropdown.style.display = 'block';
+                } else {
+                    dropdown.style.display = 'none';
+                }
+            }
+
+            function updateAudioSource() {
+                var selectedFrequency = document.getElementById('frequencySelect').value;
+                var audioSource = document.getElementById('audioSource');
+                var audioPlayer = document.getElementById('audioPlayer');
+                audioSource;
+
+                audio = {{audio|safe}}
+                audio_freq = audio[selectedFrequency];
+                audioSource.src = "/media/" + audio_freq
+
+
+                audioPlayer.load();
+            }
+
+            function likeScribe(scribeId) {
+                // Get CSRF token from cookies
+                var csrftoken = getCookie('csrftoken');
+
+                $.ajax({
+                    url: '/like-scribe/' + scribeId + '/',
+                    type: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: csrftoken  // Include CSRF token in the request data
+                    },
+                    success: function(response) {
+                        $('#likesCount').text(response.likes);
+                        console.log("Likes updated:", response.likes);
+                        $('#likesCount').addClass('liked');
+                        if (response.added_like) {
+                                $('.like-icon').addClass('liked');
+                            } else {
+                                $('.like-icon').removeClass('liked');
+                            }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error liking Scribe:', error);
+                    }
+                });
+            }
+
+
+            function addFavAuthor(scribeId) {
+                // Get CSRF token from cookies
+                var csrftoken = getCookie('csrftoken');
+
+                $.ajax({
+                    url: '/fav-author/' + scribeId + '/',
+                    type: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: csrftoken  // Include CSRF token in the request data
+                    },
+                    success: function(response) {
+                        if (response.added_fav) {
+                                $('.fav-icon').addClass('liked');
+                            } else {
+                                $('.fav-icon').removeClass('liked');
+                            }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error adding favourite author:', error);
+                    }
+                });
+            }
+
+
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        // Check if the cookie name matches the requested name
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+         </script>
+    </body>
+</html>

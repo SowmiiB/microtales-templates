@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register User</title>
+</head>
+<body>
+    <h2>Register User</h2>
+
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="id_username">Username:</label><br>
+        <input type="text" id="id_username" name="username" maxlength="100" required><br><br>
+
+        <label for="id_email">Email:</label><br>
+        <input type="email" id="id_email" name="email" required><br><br>
+
+        <label for='id_phone'>Phone:</label><br>
+        <input type="tel" id="id_phone" name="phone" required><br><br>
+
+        <label for="id_password">Password:</label><br>
+        <input type="password" id="id_password" name="password" required><br><br>
+
+        <label for="id_confirm_password">Confirm Password:</label><br>
+        <input type="password" id="id_confirm_password" name="confirm_password" required><br><br>
+
+        <label for="id_role">Role:</label><br>
+        <select id="id_role" name="role" required>
+            <option value="reader">I'm a Reader</option>
+            <option value="writer">I'm a Writer</option>
+        </select><br><br>
+
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>

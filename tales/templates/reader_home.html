@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reader Homepage</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2feff;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            text-align: center; /* Center align content */
+            position: relative; /* Set body to relative for positioning */
+        }
+
+        h1 {
+            margin-top: 20px;
+            color: #4676a6;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+
+        /* Search Bar Styling */
+        .search-bar {
+            margin: 20px auto; /* Center the search bar */
+        }
+
+        .search-input {
+            padding: 8px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Scribes List Styling */
+        .scribes-list {
+            margin: 20px auto; /* Center the scribes list */
+            max-width: 1000px; /* Limit width of the list */
+            text-align: left; /* Align list items to the left */
+        }
+
+        .scribe-item {
+            position: relative; /* Position for absolute elements */
+            display: inline-block; /* Display scribe items in a row */
+            width: calc(33.33% - 20px); /* Set width for each item (adjust as needed) */
+            height: 300px;
+            margin: 10px; /* Add some margin between items */
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left; /* Align content to the left */
+            vertical-align: top; /* Align items from the top */
+        }
+
+        .thumbnail-container {
+            width: 100%; /* Set fixed width for thumbnail container */
+            height: 150px; /* Set fixed height for thumbnail container */
+            overflow: hidden; /* Hide overflow */
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        .thumbnail-container img {
+            width: 100%; /* Make the image fill the container */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        .scribe-title {
+            font-weight: bold;
+            color: #333;
+            margin: 10px;
+        }
+
+        .scribe-details {
+            color: #666;
+            margin: 0 10px 10px; /* Adjust margins */
+        }
+
+        .buttons-container {
+            text-align: center; /* Center align buttons */
+            margin-top: 10px; /* Add some margin */
+        }
+
+        .view-button,
+        .save-button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 5px; /* Add margin between buttons */
+        }
+
+        .saved-button {
+            padding: 8px 16px;
+            background-color: green;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 5px; /* Add margin between buttons */
+        }
+
+        .view-button:hover,
+        .save-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Logout Button Styling */
+        .logout-button {
+            position: absolute; /* Position the button absolutely */
+            top: 30px; /* Set distance from top */
+            right: 20px; /* Set distance from right */
+            padding: 8px 16px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .logout-button:hover {
+            background-color: #c82333;
+        }
+        .icons-container {
+            position: absolute;
+            top: 20px;
+            right: 20px; /* Adjust the right position */
+        }
+
+        .icon-container {
+            display: inline-block;
+            margin-right: 0px;
+            margin-left: 0px
+        }
+
+        .icon-button {
+            padding: 5px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .icon-button img {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        .icon-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Tooltip Styling */
+        .icon-container {
+            position: relative;
+            top : 0px;
+            right: 10px;
+            width: 70px;
+            height:30px;
+        }
+
+        .icon-container .tooltip {
+            visibility: hidden;
+            width: 120px;
+            height: 300px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 80%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .icon-container:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome, {{ username }}</h1>
+
+
+
+    <div class="icons-container">
+    <div class="icon-container" title="Liked Scribes">
+        <button class="icon-button"><img src="/media/images/icons/Liked Scribes.png" alt="Liked Scribes"></button>
+    </div>
+    <div class="icon-container" title="Saved for Later">
+        <button class="icon-button"><img src="/media/images/icons/saved_for_later.png" alt="Saved for Later"></button>
+    </div>
+    <div class="icon-container" title="Scribes from Favourite Author">
+        <button class="icon-button"><img src="/media/images/icons/Favourite_author_scribes.png" alt="Favourite Authors"></button>
+    </div>
+        <div class="icon-container" title="Logout" onclick="window.location.href='{% url 'logout' %}'">
+        <button class="icon-button"><img src="/media/images/icons/logout.png" alt="LogOut"></button>
+    </div>
+</div>
+
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+    <form method="GET" action="{% url 'reader_home' %}">
+        <input type="text" class="search-input" name="search" placeholder="Search...">
+        <button type="submit" class="search-button">Search</button>
+    </form>
+    </div>
+
+    <!-- Scribes List -->
+    <div class="scribes-list">
+        <h2>Scribes</h2>
+        {% if scribes %}
+            {% for scribe in scribes %}
+                <div class="scribe-item">
+                    <div class="thumbnail-container">
+                        <img src="/media/{{ scribe.thumbnail }}" alt="Thumbnail">
+                    </div>
+                    <div class="scribe-title">{{ scribe.title }}</div>
+                    <div class="scribe-details">Genre: {{ scribe.genre }}</div>
+                    <div class="scribe-details">Language: {{ scribe.language }}</div>
+                    <!-- Add more details if needed -->
+                    <div class="buttons-container">
+                        <button class="view-button" onclick="window.location.href='{% url 'content' scribe.id %}'">View</button>
+                        {% if scribe.saved %}
+                            <button class="saved-button">Saved</button>
+                        {% else %}
+                            <button class="save-button" onclick="window.location.href='{% url 'save_for_later' scribe.id %}'">Save for Later</button>
+                        {% endif %}
+
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No scribes available.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
